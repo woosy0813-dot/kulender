@@ -51,7 +51,7 @@ const KU_ACADEMIC_CALENDAR_2026 = {
   },
   '2026-06-16': {
     events: [{ id: 'ku_ev_2', time: '09:00', title: '2026학년도 1학기 기말고사 시작' }],
-    todos: [{ id: 'ku_td_1', text: '기말고사 범위 과제물 블랙보드 제출 확인', completed: false }]
+    todos: []
   },
   '2026-06-17': {
     events: [{ id: 'ku_ev_3', time: '09:00', title: '1학기 기말고사 기간' }],
