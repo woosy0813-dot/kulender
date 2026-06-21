@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="고려대학교 학우를 위한 화사한 크림슨 테마 로컬 스케줄러. 시간 기준 일정과 체크 기반 할 일을 분리하고, 고려대 전용 할 일 추천 및 학사일정을 내장합니다.">
+  <title>KU 하루일정 - 고려대학교 로컬 스케줄러</title>
+  <!-- 구글 폰트 (Outfit, Noto Sans KR) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- 헤더 영역 -->
+    <header class="app-header">
+      <h1 class="app-title"><span class="accent-crimson">KU</span> 하루일정</h1>
+      <p class="app-subtitle">고려대학교 학우들을 위한 안전한 학사일정 및 일정·할 일 관리자</p>
+    </header>
+
+    <!-- 2컬럼 레이아웃 바디 -->
+    <div class="app-layout">
+      
+      <!-- 1. 좌측 패널 (오늘의 일정 & 할 일 고정) -->
+      <aside class="left-panel">
+        <!-- 오늘의 일정 -->
+        <section class="panel-card today-events-section" aria-labelledby="today-events-heading">
+          <h2 id="today-events-heading" class="panel-title text-crimson">
+            <span class="title-icon">⏰</span> 오늘의 일정
+          </h2>
+          <div class="list-container">
+            <ul id="today-event-list" class="item-list">
+              <!-- JS 동적 추가 -->
+              <li class="empty-state">오늘 등록된 일정이 없습니다.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- 오늘의 할 일 -->
+        <section class="panel-card today-todos-section" aria-labelledby="today-todos-heading">
+          <h2 id="today-todos-heading" class="panel-title text-rose">
+            <span class="title-icon">✅</span> 오늘의 할 일
+          </h2>
+          <div class="list-container">
+            <ul id="today-todo-list" class="item-list">
+              <!-- JS 동적 추가 -->
+              <li class="empty-state">오늘 해야 할 일이 없습니다.</li>
+            </ul>
+          </div>
+        </section>
+      </aside>
+
+      <!-- 2. 우측 패널 (월간 달력 및 선택 날짜 상세 관리) -->
+      <main class="right-panel">
+        
+        <!-- 달력 카드 -->
+        <section class="panel-card calendar-section" aria-labelledby="calendar-heading">
+          <h2 id="calendar-heading" class="sr-only">월간 달력</h2>
+          <div class="calendar-header">
+            <button id="prev-month-btn" class="btn-arrow" aria-label="이전 달로 이동" title="이전 달">&lt;</button>
+            <h3 id="calendar-month-year" class="calendar-title">2026년 6월</h3>
+            <button id="next-month-btn" class="btn-arrow" aria-label="다음 달로 이동" title="다음 달">&gt;</button>
+          </div>
+          
+          <div class="calendar-grid-wrapper">
+            <!-- 요일 헤더 -->
+            <div class="calendar-weekdays">
+              <span class="weekday sunday">일</span>
+              <span class="weekday">월</span>
+              <span class="weekday">화</span>
+              <span class="weekday">수</span>
+              <span class="weekday">목</span>
+              <span class="weekday">금</span>
+              <span class="weekday saturday">토</span>
+            </div>
+            <!-- 날짜 본체 -->
+            <div id="calendar-days" class="calendar-days-grid">
+              <!-- JS 동적 캘린더 일자 주입 -->
+            </div>
+          </div>
+        </section>
+
+        <!-- 선택 날짜 상세 카드 (일정 & 할 일 추가/확인) -->
+        <section class="panel-card detail-section" aria-labelledby="detail-heading">
+          <div class="detail-header">
+            <h2 id="detail-heading" class="section-title">
+              📅 <span id="selected-date-display">2026년 06월 21일 (일)</span>
+            </h2>
+          </div>
+
+          <div class="detail-grid">
+            <!-- [일정 컬럼] -->
+            <div class="detail-column event-column">
+              <h3 class="column-subtitle text-crimson">일정 (시간 약속)</h3>
+              
+              <div class="detail-list-wrapper">
+                <ul id="selected-event-list" class="item-list">
+                  <!-- JS 동적 추가 -->
+                  <li class="empty-state">등록된 일정이 없습니다.</li>
+                </ul>
+              </div>
+
+              <!-- 일정 추가 폼 -->
+              <form id="event-form" class="input-form" novalidate>
+                <div class="input-group">
+                  <label for="event-time" class="sr-only">시간 선택</label>
+                  <input type="time" id="event-time" class="time-input" required>
+                  
+                  <label for="event-input" class="sr-only">일정 입력</label>
+                  <input type="text" id="event-input" placeholder="일정 (예: 데이터베이스 수업)" class="text-input" required autocomplete="off">
+                  
+                  <button type="submit" class="btn btn-crimson">저장</button>
+                </div>
+              </form>
+
+              <!-- 일정에 따른 추천 할 일 영역 -->
+              <div id="recommendation-section" class="recommendation-area hidden">
+                <p class="recommend-title">💡 이 일정과 관련된 추천 할 일:</p>
+                <div id="recommend-chips" class="recommend-chips-container">
+                  <!-- JS 동적 추가 -->
+                </div>
+              </div>
+            </div>
+
+            <!-- [할 일 컬럼] -->
+            <div class="detail-column todo-column">
+              <h3 class="column-subtitle text-rose">할 일 (체크리스트)</h3>
+              
+              <div class="detail-list-wrapper">
+                <ul id="selected-todo-list" class="item-list">
+                  <!-- JS 동적 추가 -->
+                  <li class="empty-state">등록된 할 일이 없습니다.</li>
+                </ul>
+              </div>
+
+              <!-- 할 일 추가 폼 -->
+              <form id="todo-form" class="input-form" novalidate>
+                <div class="input-group">
+                  <label for="todo-input" class="sr-only">할 일 입력</label>
+                  <input type="text" id="todo-input" placeholder="할 일 (예: 과제 제출하기)" class="text-input" required autocomplete="off">
+                  
+                  <button type="submit" class="btn btn-rose">저장</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- 푸터 영역 -->
+    <footer class="app-footer">
+      <p>&copy; 2026 KU 로컬 일정 관리자. 모든 데이터는 브라우저 내부(LocalStorage)에만 안전하게 저장됩니다.</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

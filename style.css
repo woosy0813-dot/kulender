@@ -1,0 +1,749 @@
+/* --- 디자인 시스템 토큰 (고려대 크림슨 라이트 테마) --- */
+:root {
+  /* 배경 색상 */
+  --bg-page: #fdfbfb;          /* 따뜻한 미색이 감도는 맑은 아이보리 오프화이트 */
+  --bg-card: #ffffff;          /* 순백색 카드 */
+  --bg-input: #f6f0f0;         /* 붉은 기가 도는 연한 입력 필드 배경 */
+  
+  /* 텍스트 색상 (레드브라운 계열을 섞어 부드럽게 설계) */
+  --text-main: #332222;        /* 짙은 고동색 계열 (가독성 높은 메인 텍스트) */
+  --text-sub: #776666;         /* 중간 웜그레이 */
+  --text-muted: #a69999;       /* 흐린 웜그레이 */
+  
+  /* 고려대 크림슨 테마 (일정 전용) */
+  --crimson-primary: #a41f35;   /* 고대 공식 크림슨 */
+  --crimson-soft: #c93b53;      /* 약간 화사한 크림슨 레드 */
+  --crimson-bg: #faf0f1;        /* 연한 크림슨 핑크 틴트 배경 */
+  --crimson-glow: rgba(164, 31, 53, 0.08);
+  --crimson-border: rgba(164, 31, 53, 0.15);
+  
+  /* 파스텔 로즈 테마 (할 일 전용) */
+  --rose-primary: #e05a70;      /* 차분하고 세련된 로즈 핑크 */
+  --rose-soft: #f08294;
+  --rose-bg: #fff0f2;           /* 매우 연한 로즈 핑크 배경 */
+  --rose-glow: rgba(224, 90, 112, 0.08);
+  --rose-border: rgba(224, 90, 112, 0.15);
+  
+  /* 공통 인터페이스 데코 */
+  --border-color: #f0e6e6;     /* 붉은 톤이 미세하게 섞인 보더 라인 */
+  --shadow-sm: 0 2px 8px rgba(164, 31, 53, 0.02);
+  --shadow-md: 0 10px 25px -5px rgba(164, 31, 53, 0.06), 0 8px 16px -6px rgba(164, 31, 53, 0.04);
+  
+  /* 레이아웃 & 전환 */
+  --radius-lg: 16px;
+  --radius-md: 10px;
+  --radius-sm: 6px;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.15s ease;
+  --max-width: 1100px;
+}
+
+/* --- 초기화 및 기본 스타일 --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Outfit', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* --- 앱 컨테이너 --- */
+.app-container {
+  width: 100%;
+  max-width: var(--max-width);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* --- 헤더 --- */
+.app-header {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.app-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+.app-title .accent-crimson {
+  color: var(--crimson-primary);
+  position: relative;
+}
+
+.app-title .accent-crimson::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: var(--rose-soft);
+  border-radius: 2px;
+}
+
+.app-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-sub);
+  font-weight: 400;
+}
+
+/* --- 2컬럼 레이아웃 바디 --- */
+.app-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+/* --- 카드 디자인 공통 --- */
+.panel-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-smooth);
+}
+
+.panel-card:hover {
+  box-shadow: 0 15px 30px -5px rgba(164, 31, 53, 0.1);
+  border-color: var(--rose-border);
+}
+
+/* --- 1. 좌측 패널 (오늘의 일정 & 할 일) --- */
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: sticky;
+  top: 40px;
+}
+
+.panel-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-title .title-icon {
+  font-size: 1.25rem;
+}
+
+.text-crimson {
+  color: var(--crimson-primary);
+}
+
+.text-rose {
+  color: var(--rose-primary);
+}
+
+/* 고정 리스트 영역 */
+.left-panel .list-container {
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* 스크롤바 디자인 */
+.list-container::-webkit-scrollbar,
+.detail-list-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+.list-container::-webkit-scrollbar-track,
+.detail-list-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+.list-container::-webkit-scrollbar-thumb,
+.detail-list-wrapper::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+.list-container::-webkit-scrollbar-thumb:hover,
+.detail-list-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* --- 2. 우측 패널 --- */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* 2-1. 월간 달력 섹션 */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.calendar-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+}
+
+.btn-arrow {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  color: var(--text-sub);
+  font-size: 1.1rem;
+  font-weight: 600;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.btn-arrow:hover {
+  background-color: var(--crimson-bg);
+  color: var(--crimson-primary);
+  border-color: var(--crimson-soft);
+}
+
+/* 요일 헤더 */
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+.weekday {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-sub);
+}
+
+.weekday.sunday {
+  color: var(--rose-primary);
+}
+
+.weekday.saturday {
+  color: var(--crimson-primary);
+}
+
+/* 달력 날짜 그리드 */
+.calendar-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+/* 날짜 칸 개별 */
+.calendar-day {
+  aspect-ratio: 1.1 / 1;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition-fast);
+}
+
+.calendar-day:hover {
+  background-color: var(--bg-input);
+}
+
+.calendar-day .day-number {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+/* 이전/다음 달 날짜 (뮤트 처리) */
+.calendar-day.other-month {
+  opacity: 0.35;
+}
+
+/* 일요일, 토요일 색상 */
+.calendar-day.sun .day-number {
+  color: var(--rose-primary);
+}
+.calendar-day.sat .day-number {
+  color: var(--crimson-primary);
+}
+
+/* 오늘 날짜 표시 */
+.calendar-day.today {
+  background-color: var(--crimson-bg);
+  border: 1.5px solid var(--crimson-soft);
+}
+.calendar-day.today .day-number {
+  font-weight: 700;
+  color: var(--crimson-primary);
+}
+
+/* 선택된 날짜 */
+.calendar-day.selected {
+  background-color: var(--text-main);
+  box-shadow: 0 4px 10px rgba(51, 34, 34, 0.25);
+}
+.calendar-day.selected .day-number {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* 일정/할 일 도트 표시 컨테이너 */
+.day-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 4px;
+  height: 6px;
+  width: 100%;
+}
+
+.indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.indicator-dot.event {
+  background-color: var(--crimson-primary);
+  box-shadow: 0 0 6px var(--crimson-primary);
+}
+
+.indicator-dot.todo {
+  background-color: var(--rose-primary);
+  box-shadow: 0 0 6px var(--rose-primary);
+}
+
+/* 선택되었을 때 도트 색상 변경 */
+.calendar-day.selected .indicator-dot.event {
+  background-color: var(--crimson-soft);
+}
+.calendar-day.selected .indicator-dot.todo {
+  background-color: var(--rose-soft);
+}
+
+
+/* 2-2. 선택 날짜 상세 관리 카드 */
+.detail-header {
+  border-bottom: 1.5px solid var(--border-color);
+  padding-bottom: 14px;
+  margin-bottom: 24px;
+}
+
+.detail-header .section-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* 2단 상세 레이아웃 */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.detail-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.column-subtitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+.column-subtitle.text-crimson {
+  border-color: var(--crimson-soft);
+}
+
+.column-subtitle.text-rose {
+  border-color: var(--rose-soft);
+}
+
+.detail-list-wrapper {
+  min-height: 120px;
+  max-height: 240px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-page);
+  padding: 12px;
+}
+
+/* --- 리스트 아이템 공통 --- */
+.item-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  animation: slideIn 0.25s ease-out;
+  transition: var(--transition-fast);
+}
+
+.list-item:hover {
+  transform: translateX(2px);
+  border-color: var(--text-muted);
+}
+
+.item-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  word-break: break-all;
+}
+
+/* 시간 라벨 (일정용) */
+.time-badge {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background-color: var(--crimson-bg);
+  color: var(--crimson-primary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--crimson-border);
+}
+
+/* 할 일 완료선 */
+.list-item.completed .todo-text {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* 커스텀 체크박스 (할 일 전용) */
+.checkbox-container {
+  display: block;
+  position: relative;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  background-color: transparent;
+  border: 2px solid var(--text-sub);
+  border-radius: 4px;
+  transition: var(--transition-fast);
+}
+
+.checkbox-container:hover input ~ .checkmark {
+  border-color: var(--rose-primary);
+}
+
+.checkbox-container input:checked ~ .checkmark {
+  background-color: var(--rose-primary);
+  border-color: var(--rose-primary);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.checkbox-container .checkmark:after {
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* 삭제 단추 */
+.btn-item-delete {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.btn-item-delete:hover {
+  color: #ef4444;
+  background-color: #fee2e2;
+}
+
+/* 빈 상태 문구 */
+.empty-state {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding: 20px 0;
+}
+
+/* --- 입력 폼 및 컨트롤 --- */
+.input-form {
+  margin-top: 4px;
+}
+
+.input-form .input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.text-input {
+  flex: 1;
+  background-color: var(--bg-input);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-size: 0.88rem;
+  padding: 10px 14px;
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+.text-input:focus {
+  background-color: #ffffff;
+  border-color: var(--text-muted);
+}
+
+.time-input {
+  background-color: var(--bg-input);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  padding: 10px;
+  outline: none;
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.time-input:focus {
+  background-color: #ffffff;
+  border-color: var(--crimson-soft);
+}
+
+/* 저장 버튼 */
+.btn {
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: #ffffff;
+  transition: var(--transition-fast);
+}
+
+.btn-crimson {
+  background: var(--crimson-primary);
+  box-shadow: 0 2px 6px rgba(164, 31, 53, 0.2);
+}
+.btn-crimson:hover {
+  background: var(--crimson-soft);
+  transform: translateY(-1px);
+}
+
+.btn-rose {
+  background: var(--rose-primary);
+  box-shadow: 0 2px 6px rgba(224, 90, 112, 0.2);
+}
+.btn-rose:hover {
+  background: var(--rose-soft);
+  transform: translateY(-1px);
+}
+
+/* --- 일정 추천 영역 --- */
+.recommendation-area {
+  background-color: var(--crimson-bg);
+  border: 1px dashed var(--crimson-border);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-top: 10px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.recommendation-area.hidden {
+  display: none;
+}
+
+.recommend-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--crimson-primary);
+  margin-bottom: 8px;
+}
+
+.recommend-chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.recommend-chip {
+  background-color: #ffffff;
+  border: 1px solid var(--crimson-border);
+  color: var(--crimson-primary);
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.recommend-chip:hover {
+  background-color: var(--crimson-primary);
+  color: #ffffff;
+  border-color: var(--crimson-primary);
+  transform: translateY(-1px);
+}
+
+.recommend-chip:active {
+  transform: translateY(0);
+}
+
+/* --- 푸터 --- */
+.app-footer {
+  text-align: center;
+  padding: 20px 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-color);
+  margin-top: 20px;
+}
+
+/* --- 키프레임 애니메이션 --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- 미디어 쿼리 (반응형 모바일 환경) --- */
+@media (max-width: 1024px) {
+  body {
+    padding: 20px 10px;
+  }
+
+  .app-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .left-panel {
+    position: static;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .left-panel .panel-card {
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .left-panel {
+    flex-direction: column;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .input-form .input-group {
+    flex-direction: column;
+  }
+  
+  .btn {
+    padding: 12px;
+  }
+}
